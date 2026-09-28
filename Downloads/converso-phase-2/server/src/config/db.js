@@ -1,0 +1,16 @@
+import mongoose from 'mongoose';
+import { env } from './env.js';
+
+export async function connectDB() {
+  mongoose.set('strictQuery', true);
+
+  mongoose.connection.on('disconnected', () => console.warn('MongoDB disconnected'));
+  mongoose.connection.on('reconnected', () => console.info('MongoDB reconnected'));
+
+  await mongoose.connect(env.MONGODB_URI, { serverSelectionTimeoutMS: 8000 });
+  console.info(`MongoDB connected (${mongoose.connection.name})`);
+}
+
+export async function disconnectDB() {
+  await mongoose.disconnect();
+}

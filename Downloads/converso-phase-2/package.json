@@ -1,0 +1,28 @@
+{
+  "name": "converso",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Converso: practice the conversation before the real moment.",
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "engines": {
+    "node": ">=20.19"
+  },
+  "scripts": {
+    "dev": "concurrently -n api,web -c blue,green \"npm run dev -w server\" \"npm run dev -w client\"",
+    "dev:client": "npm run dev -w client",
+    "dev:server": "npm run dev -w server",
+    "build": "npm run build -w client",
+    "start": "npm run start -w server",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.0",
+    "prettier": "^3.3.0"
+  },
+  "overrides": {
+    "esbuild": "0.25.8"
+  }
+}

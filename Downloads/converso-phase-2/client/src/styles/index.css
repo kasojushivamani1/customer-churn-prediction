@@ -1,0 +1,176 @@
+@import 'tailwindcss';
+
+@theme {
+  /* Color: navy ink for text, ultramarine for action, amber only as a spotlight. */
+  --color-ink: #18213d;
+  --color-muted: #545c7a;
+  --color-paper: #f6f7fb;
+  --color-paper-deep: #eceff8;
+  --color-line: #e0e3f0;
+  --color-line-strong: #c9cfe3;
+  --color-brand: #2f45e8;
+  --color-brand-deep: #2231b8;
+  --color-brand-tint: #e9ecff;
+  --color-spot: #ffbf3f;
+  --color-spot-tint: #fff3d6;
+  --color-verified: #0b7a5e;
+  --color-verified-tint: #dcf3ec;
+
+  /* Type: a characterful display face for headings, a calm humanist sans for reading. */
+  --font-display: 'Bricolage Grotesque', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Figtree', ui-sans-serif, system-ui, sans-serif;
+
+  --radius-card: 1.25rem;
+
+  /* Elevation: quiet at rest, clearer on hover. Blue-tinted shadows only for brand surfaces. */
+  --shadow-card: 0 1px 2px rgb(24 33 61 / 0.05), 0 6px 16px -8px rgb(24 33 61 / 0.12);
+  --shadow-card-hover: 0 2px 4px rgb(24 33 61 / 0.06), 0 24px 44px -18px rgb(24 33 61 / 0.26);
+  --shadow-ticket: 0 1px 2px rgb(24 33 61 / 0.06), 0 26px 50px -18px rgb(24 33 61 / 0.28);
+  --shadow-featured: 0 30px 60px -30px rgb(47 69 232 / 0.75), 0 8px 16px -8px rgb(47 69 232 / 0.35);
+  --shadow-cta: inset 0 1px 0 rgb(255 255 255 / 0.2), 0 8px 20px -6px rgb(47 69 232 / 0.55);
+  --shadow-cta-hover: inset 0 1px 0 rgb(255 255 255 / 0.2), 0 14px 28px -8px rgb(47 69 232 / 0.6);
+  --shadow-nav: 0 10px 28px -16px rgb(24 33 61 / 0.3);
+}
+
+@layer base {
+  html {
+    scroll-padding-top: 5.5rem;
+  }
+
+  body {
+    @apply bg-paper font-sans text-ink antialiased;
+  }
+}
+
+::selection {
+  background: rgb(47 69 232 / 0.18);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* ---------- Backgrounds (plain CSS so they never depend on generated theme variables) ---------- */
+
+/* Two very soft washes: ultramarine top-right behind the session card, amber bottom-left. */
+.hero-glow {
+  background-image:
+    radial-gradient(48rem 32rem at 88% 4%, rgb(47 69 232 / 0.1), transparent 70%),
+    radial-gradient(34rem 26rem at 0% 78%, rgb(255 191 63 / 0.13), transparent 70%);
+}
+
+/* A faint dot grid that fades out, for texture behind the hero. */
+.dot-grid {
+  background-image: radial-gradient(rgb(24 33 61 / 0.11) 1px, transparent 1px);
+  background-size: 24px 24px;
+  -webkit-mask-image: radial-gradient(60% 70% at 78% 28%, #000 0%, transparent 75%);
+  mask-image: radial-gradient(60% 70% at 78% 28%, #000 0%, transparent 75%);
+}
+
+/* Single soft highlight inside the dark partner panel. */
+.panel-glow {
+  background-image: radial-gradient(38rem 24rem at 100% 0%, rgb(47 69 232 / 0.4), transparent 65%);
+}
+
+/* ---------- Motion ---------- */
+
+/* Hero entrance: set --delay inline to stagger elements. */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.rise {
+  animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: var(--delay, 0ms);
+}
+
+/* Scroll reveal: the Reveal component adds .is-visible when the element enters the viewport. */
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 0.6s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Journey rail: the line draws and the final node pops in once the rail is on screen. */
+@keyframes draw-line {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.draw-line {
+  transform-origin: left center;
+  animation: draw-line 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: var(--delay, 0.4s);
+}
+
+.pop-in {
+  animation: pop-in 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.4) both;
+  animation-delay: var(--delay, 1.35s);
+}
+
+.reveal:not(.is-visible) .draw-line,
+.reveal:not(.is-visible) .pop-in {
+  animation-play-state: paused;
+}
+
+@keyframes menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.menu-in {
+  animation: menu-in 0.18s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rise,
+  .draw-line,
+  .pop-in,
+  .menu-in {
+    animation: none;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
